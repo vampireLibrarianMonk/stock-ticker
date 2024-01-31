@@ -1,33 +1,24 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - echo "Installing Miniconda..."
-      - wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-      - bash miniconda.sh -b -p $HOME/miniconda
-      - export PATH="$HOME/miniconda/bin:$PATH"
-      - conda config --set always_yes yes --set changeps1 no
-      - conda update -q conda
-      - conda info -a
-
   pre_build:
     commands:
-      - echo "Creating Conda environment..."
-      - conda env create -f envs/environment.yml
+      - env
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+#      - REPOSITORY_URI=<your-ecr-repository-uri>
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
   build:
     commands:
-      - echo "Building project..."
-      # Add commands to build your project here
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -f containerfile -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
 
   post_build:
     commands:
-      - echo "Packaging project..."
-      - cd ..
-      - tar -czvf stock-ticker-latest.tar.gz ${CODEBUILD_SRC_DIR}
-
-artifacts:
-  files:
-    - stock-ticker-latest.tar.gz
-
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:latest
