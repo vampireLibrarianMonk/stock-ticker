@@ -1,0 +1,13 @@
+# IDE 
+.idea
+
+# Compiled 
+*.pyc
+
+# Archives
+*.zip
+*.tar.gz
+*.tar
+
+# Database
+db.sqlite3

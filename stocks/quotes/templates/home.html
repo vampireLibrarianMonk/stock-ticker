@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if ticker %}
+    {{ ticker }}
+{% endif %}
+
+{% if api_list %}
+    {% if api_list|length == 1 and api_list.0 == None %}
+        <p>There was a problem with your ticker symbol, please try again.</p>
+    {% else %}
+
+        {% for item in api_list %}
+
+            {% if item %}
+
+                <h1>{{ item.companyName }}</h1><br/>
+                Price: ${{ item.latestPrice }}<br/>
+                Previous Close: ${{ item.previousCLose }}<br/>
+                Market Cap: ${{ item.marketCap }}<br/>
+                YTD Change: ${{ item.ytdChange }}<br/>
+                52 Wk High: ${{ item.week52High }}<br/>
+                52 Wk Low: ${{ item.week52Low }}<br/>
+
+<!--                {% for key, value in thing.items %}-->
+<!--                    {{ key }}: {{ value }}<br/>-->
+<!--                {% endfor %}-->
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
+{% endblock %}
