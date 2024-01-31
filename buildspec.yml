@@ -14,7 +14,7 @@ phases:
   pre_build:
     commands:
       - echo "Creating Conda environment..."
-      - conda env create -f envs/stock-ticker.yml
+      - conda env create -f envs/environment.yml
 
   build:
     commands:
