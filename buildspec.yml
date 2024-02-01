@@ -4,8 +4,8 @@ phases:
     runtime-versions:
         docker: 25
     commands:
-      - service docker start
-      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - docker --version
+      - nohup dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 &
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
