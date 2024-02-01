@@ -5,7 +5,6 @@ phases:
         docker: 25
     commands:
       - cat /etc/os-release
-      - aws --version
       - docker --version
       - usermod -aG docker ${USER}
       - nohup dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 &
