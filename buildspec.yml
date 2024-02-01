@@ -42,7 +42,7 @@ phases:
     commands:
     - echo Build completed on `date`
     - echo pushing to repo
-    - docker push $REPOSITORY_URI/$IMAGE_TAG
+    - docker push $REPOSITORY_URI:$IMAGE_TAG
     - echo Writing image definitions file...
     #- printf '[{"ImageURI":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
     - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
