@@ -1,16 +1,28 @@
 version: 0.2
 phases:
-  install:
-    runtime-versions:
-        docker: 25
-    commands:
-      - cat /etc/os-release
-      - docker --version
-      - usermod -aG docker ${USER}
-      - nohup dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 &
-      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
+    - cat /etc/os-release
+    - aws --version
+
+    # Add Docker's official GPG key:
+    - sudo apt-get update
+    - sudo apt-get install -y ca-certificates curl
+    - sudo install -m 0755 -d /etc/apt/keyrings
+    - sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    - sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # Add the repository to Apt sources:
+    - echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - sudo apt-get update -y
+    - sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    - docker --version
+    - usermod -aG docker ${USER}
     - echo Logging in to Amazon ECR....
     - cat /etc/os-release
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
