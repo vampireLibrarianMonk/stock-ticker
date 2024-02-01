@@ -2,6 +2,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+    - env
     - cat /etc/os-release
     - aws --version
 
@@ -25,7 +26,7 @@ phases:
     - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
     - docker --version
-    - usermod -aG docker ${USER}
+    - usermod -aG docker $(whoami)
     - echo Logging in to Amazon ECR....
     - cat /etc/os-release
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
