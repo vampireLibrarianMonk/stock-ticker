@@ -1,5 +1,10 @@
 version: 0.2
 phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+
   pre_build:
     commands:
     - env
@@ -22,11 +27,11 @@ phases:
     # Remove the temporary file:
     - rm /tmp/docker.list
 
+    # Install docker
     - apt-get update -y
     - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
     - docker --version
-    - usermod -aG docker $(whoami)
+
     - echo Logging in to Amazon ECR....
     - cat /etc/os-release
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
