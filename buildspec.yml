@@ -29,7 +29,7 @@ phases:
 
     - echo Logging in to Amazon ECR....
     - cat /etc/os-release
-    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 809784555426.dkr.ecr.us-east-1.amazonaws.com
     - cat ~/.docker/config.json
     - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
     - IMAGE_TAG=latest
@@ -37,12 +37,13 @@ phases:
     commands:
     - echo Build started on `date`
     - echo Building the Docker image...
-    - docker build -f containerfile -t $REPOSITORY_URI:$IMAGE_TAG .
+    - docker build -f containerfile -t sweng-861:latest .
+    - docker tag sweng-861:latest 809784555426.dkr.ecr.us-east-1.amazonaws.com/sweng-861:latest
   post_build:
     commands:
     - echo Build completed on `date`
     - echo pushing to repo
-    - docker push $REPOSITORY_URI:$IMAGE_TAG
+    - docker push 809784555426.dkr.ecr.us-east-1.amazonaws.com/sweng-861:latest
     - echo Writing image definitions file...
     #- printf '[{"ImageURI":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
     - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
