@@ -4,14 +4,15 @@ phases:
     runtime-versions:
         docker: 25
     commands:
+      - cat /etc/os-release
+      - aws --version
       - docker --version
+      - usermod -aG docker ${USER}
       - nohup dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 &
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
   pre_build:
     commands:
     - echo Logging in to Amazon ECR....
-    - aws --version
-    - docker --version
     - cat /etc/os-release
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
     - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
