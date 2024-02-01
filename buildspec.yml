@@ -8,6 +8,9 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 #      - REPOSITORY_URI=<your-ecr-repository-uri>
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - apt-get update -y
+      - apt-get install -y docker.io
+      - service docker start
 
   build:
     commands:
