@@ -24,7 +24,11 @@ WORKDIR /home/user/stock-ticker
 
 # Copy the entrypoint script into the container
 COPY entrypoint.sh /home/user/stock-ticker/entrypoint.sh
+
+# Set scripts as executable
 RUN chmod +x /home/user/stock-ticker/entrypoint.sh
+RUN chmod +x /home/user/stock-ticker/before_install.sh
+RUN chmod +x /home/user/stock-ticker/after_install.sh
 
 # Activate the conda environment, apply migrations, and start the application through the entrypoint script
-ENTRYPOINT ["/home/user/stock-ticker/entrypoint.sh"]
+ENTRYPOINT ["/home/user/stock-ticker/scripts/entrypoint.sh"]
