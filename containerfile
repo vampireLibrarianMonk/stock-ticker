@@ -23,12 +23,10 @@ RUN micromamba create -f /home/user/stock-ticker/environment.yml && \
 WORKDIR /home/user/stock-ticker
 
 # Copy the entrypoint script into the container
-COPY /scripts /home/user/stock-ticker/scripts
+COPY /scripts/entrypoint.sh /home/user/stock-ticker/scripts/entrypoint.sh
 
 # Set scripts as executable
 RUN chmod +x /home/user/stock-ticker/scripts/entrypoint.sh
-RUN chmod +x /home/user/stock-ticker/scripts/before_install.sh
-RUN chmod +x /home/user/stock-ticker/scripts/after_install.sh
 
 # Activate the conda environment, apply migrations, and start the application through the entrypoint script
 ENTRYPOINT ["/home/user/stock-ticker/scripts/entrypoint.sh"]
