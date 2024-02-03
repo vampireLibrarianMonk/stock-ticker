@@ -23,7 +23,7 @@ RUN micromamba create -f /home/user/stock-ticker/environment.yml && \
 WORKDIR /home/user/stock-ticker
 
 # Copy the entrypoint script into the container
-COPY entrypoint.sh /home/user/stock-ticker/scripts/entrypoint.sh
+COPY /scripts /home/user/stock-ticker/scripts
 
 # Set scripts as executable
 RUN chmod +x /home/user/stock-ticker/scripts/entrypoint.sh
