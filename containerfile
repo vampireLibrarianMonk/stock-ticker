@@ -22,5 +22,9 @@ RUN micromamba create -f /home/user/stock-ticker/environment.yml && \
 # Set the working directory
 WORKDIR /home/user/stock-ticker
 
-# Activate the conda environment and start the application
-ENTRYPOINT [ "/bin/bash", "-c", "micromamba run -n $(head -1 /home/user/stock-ticker/environment.yml | cut -d' ' -f2) /home/user/stock-ticker/stocks/manage.py runserver 0.0.0.0:8000" ]
+# Copy the entrypoint script into the container
+COPY entrypoint.sh /home/user/stock-ticker/entrypoint.sh
+RUN chmod +x /home/user/stock-ticker/entrypoint.sh
+
+# Activate the conda environment, apply migrations, and start the application through the entrypoint script
+ENTRYPOINT ["/home/user/stock-ticker/entrypoint.sh"]
