@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r25*o5g(5_akf9u+7b-vx&(9_xtz#y_b2-_v6ysgjn^$8hn(zh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # Consider narrowing this in production
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'quotes',
+    'quotes',  # Your custom app
 ]
 
 MIDDLEWARE = [
@@ -110,13 +110,20 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Ensure you have a directory named 'static' at the project's root
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
