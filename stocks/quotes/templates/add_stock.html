@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load timestamp_filters %}
 {% block content %}
 
 
@@ -20,31 +21,39 @@
 <br/><br/>
 
 <table class="table table-bordered table-hover">
-  <thead class ="thead-dark">
+  <thead class="thead-dark">
     <tr>
-      <th scope="col">Company Name</th>
-      <th scope="col">Stock Price</th>
-      <th scope="col">Previous Close</th>
-      <th scope="col">Market Cap</th>
-      <th scope="col">YTD Change</th>
-      <th scope="col">52 Wk High</th>
-      <th scope="col">52 Wk Low</th>
-      <th scope="col">Delete Stock</th>
+      <th scope="col">Symbol</th>
+      <th scope="col">Sector</th>
+      <th scope="col">Security Type</th>
+      <th scope="col">Bid Price</th>
+      <th scope="col">Bid Size</th>
+      <th scope="col">Ask Price</th>
+      <th scope="col">Ask Size</th>
+      <th scope="col">Last Updated</th>
+      <th scope="col">Last Sale Price</th>
+      <th scope="col">Last Sale Size</th>
+      <th scope="col">Last Sale Time</th>
+      <th scope="col">Volume</th>
     </tr>
   </thead>
   <tbody>
-
-{% if ticker %}
+    {% if ticker %}
         {% for item in output %}
             <tr>
-                <th scope="row">{{ item.companyName }}</th>
-                <td>${{ item.latestPrice }}</td>
-                <td>${{ item.previousClose }}</td>
-                <td>${{ item.marketCap }}</td>
-                <td>{{ item.ytdChange }}%</td>
-                <td>${{ item.week52High }}</td>
-                <td>${{ item.week52Low }}</td>
-                </tr>
+                <td>{{ item.symbol }}</td>
+                <td>{{ item.sector }}</td>
+                <td>{{ item.securityType }}</td>
+                <td>${{ item.bidPrice }}</td>
+                <td>{{ item.bidSize }}</td>
+                <td>${{ item.askPrice }}</td>
+                <td>{{ item.askSize }}</td>
+                <td>{{ item.lastUpdated|milliseconds_to_datetime }}</td>
+                <td>${{ item.lastSalePrice }}</td>
+                <td>{{ item.lastSaleSize }}</td>
+                <td>{{ item.lastSaleTime|milliseconds_to_datetime }}</td>
+                <td>{{ item.volume }}</td>
+            </tr>
         {% endfor %}
   </tbody>
 </table>

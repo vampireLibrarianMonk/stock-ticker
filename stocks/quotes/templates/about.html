@@ -1,7 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h1>Market Hours</h1>
 
-<h1>About Me...</h1>
+<p>Understanding market hours is crucial for anyone new to observing stock ticker data. The stock market operates during specific hours, typically from 9:30 AM to 4:00 PM Eastern Time on weekdays, for major exchanges like the New York Stock Exchange (NYSE) and the NASDAQ. During these hours, stocks can be bought and sold on the exchange, and the prices you see moving in real-time reflect live trading activities.</p>
+
+<p>For a newcomer, it's important to recognize that stock prices are dynamic and can change from moment to moment during market hours due to a variety of factors, including supply and demand, news, and economic indicators. Transactions can only be executed during these hours, so the "last trade" price you see at the end of the day represents the final price at which a stock was traded during official market hours. Understanding this schedule helps you grasp why you might see a flurry of activity and price changes during these times, and why prices remain static after the market closes until it reopens the next trading day. Additionally, knowing market hours is vital for planning when to place trades, especially if you're looking to capitalize on news or events that might affect stock prices.</p>
+
+<h1>About IEX Bid, Ask, and Last Trade Feature</h1>
+
+<p>The "<a href="https://iexcloud.io/documentation/financial-data/data-bundles/market-data/iex-bid-ask-and-last-trade" target="_blank">IEX Bid, Ask, and Last Trade</a>" feature of our app delivers real-time equity price data, including bids, asks, and trades, directly from IEX’s Nationally Regulated Stock Exchange. This feature is indispensable for traders and investors aiming to make well-informed decisions based on the latest market conditions.</p>
+<h2>What You Get</h2>
+
+<p>When you access this feature, you're equipped with a detailed set of data points for each equity, including:</p>
+<ul>
+    <li><strong>Company Name:</strong> The name of the company for the stock symbol, clarifying the equity in focus.</li>
+    <li><strong>Symbol:</strong> The ticker symbol representing the stock, for quick identification on the stock exchange.</li>
+    <li><strong>Sector:</strong> Industry classification of the company, providing insights into the market segment.</li>
+    <li><strong>Security Type:</strong> The type of equity (e.g., common stock, preferred stock), helping you comprehend the nature of the security.</li>
+    <li><strong>Bid Price:</strong> The highest price that buyers are willing to pay for the stock, indicative of market demand.</li>
+    <li><strong>Bid Size:</strong> The volume of stock that buyers are prepared to purchase at the bid price, reflecting demand depth.</li>
+    <li><strong>Ask Price:</strong> The minimum price that sellers are willing to accept for the stock, indicative of market supply.</li>
+    <li><strong>Ask Size:</strong> The volume of stock that sellers are willing to sell at the ask price, reflecting supply depth.</li>
+    <li><strong>Last Updated:</strong> Timestamp for the most recent data update, ensuring you have the latest market information.</li>
+    <li><strong>Last Sale Price:</strong> The price at which the stock most recently traded, offering a real-time market valuation.</li>
+    <li><strong>Last Sale Size:</strong> The number of shares traded in the last transaction, providing context to the last sale price.</li>
+    <li><strong>Last Sale Time:</strong> The exact timestamp of the last trade, giving a temporal perspective on market activity.</li>
+    <li><strong>Volume:</strong> The total number of shares traded during the session, indicating the level of activity for the equity.</li>
+</ul>
+
+<p>This rich dataset empowers you with a comprehensive view of the market dynamics for each equity, enabling informed investment decisions. By leveraging the "IEX Bid, Ask, and Last Trade" feature, you gain critical market insights that aid in assessing liquidity, understanding market trends, and executing trades with confidence.</p>
+
+<h2>IEX Top Of Book (TOPS) Endpoint</h2>
+
+<p>Our app utilizes the IEX Top Of Book (TOPS) endpoint to fetch this data, providing a snapshot of the top-of-book data for equities. This means you receive the latest bid and ask prices, along with the price of the last trade, straight from the source — ensuring accuracy and timeliness.</p>
+
+<p>The TOPS endpoint is essential for anyone involved in the stock market, as it provides a clear view of market dynamics for individual equities. Understanding these figures can help you better gauge market liquidity, depth, and potential price movements.</p>
+
+<h2>Visualizing the Data</h2>
+
+<p>To aid in quick comprehension, our app presents this data in an organized and intuitive format. Here's an illustrative example of how an equity's top-of-book data might be displayed, showcasing bid price, ask price, and the last trade price:</p>
+
+<p>(Note: Actual visualization will depend on the app's UI/UX design. The illustration aims to provide a clear, at-a-glance understanding of key market data points.)</p>
+
+<h2>Why It Matters</h2>
+
+<p>For active traders and strategic investors, real-time access to bid, ask, and last trade prices is crucial for spotting buying or selling opportunities, grasping market trends, and making swift decisions based on current market conditions.</p>
+
+<p>Our "IEX Bid, Ask, and Last Trade" feature is designed to arm you with the necessary information, precisely when you need it, helping you navigate the complexities of the stock market with greater confidence. Whether you're executing a trade or simply monitoring the market, our app ensures you have the real-time data essential for supporting your investment strategies.</p>
 
 {% endblock %}

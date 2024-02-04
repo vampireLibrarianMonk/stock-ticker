@@ -2,28 +2,40 @@ from django.shortcuts import render, redirect
 from .models import Stock
 from .forms import StockForm
 from django.contrib import messages
+from os import getenv
+from json.decoder import JSONDecodeError
+import requests
+import json
+
+secret_token = getenv('SECRET_TOKEN')
+iex_cloud_url = 'https://api.iex.cloud/v1/data/core/iex_tops/'
 
 
 def home(request):
-    import requests
-    import json
-
     if request.method == 'POST':
         ticker = request.POST['ticker']
 
-        # pk_95de9948c2164d88a23069febccef664
-        api_request = requests.get(
-            f'https://api.iex.cloud/v1/data/core/quote/{ticker}?token=sk_17a74334b7a54247b523922687d38e56')
+        # Assuming iex_cloud_url, ticker, and secret_token are defined earlier
+        api_request = requests.get(f'{iex_cloud_url}{ticker}?token={secret_token}')
 
-        try:
-            api_list = json.loads(api_request.content)
-        except Exception as e:
-            api_list = "Error..."
+        # Check for empty JSON array
+        if api_request.content == b'[]':
+            api_return = "Error: No data available for the given ticker."
+        else:
+            try:
+                api_return = json.loads(api_request.content)
+            except JSONDecodeError:
+                # If JSON decoding fails, return the raw content as a UTF-8 decoded string
+                api_return = "Error: " + api_request.content.decode('utf-8')
+            except Exception as e:
+                # Generic exception handling as a fallback
+                api_return = f"Unexpected Error: {str(e)}"
 
-        return render(request, 'home.html', {'api_list': api_list})
+        return render(request, 'home.html', {'api_return': api_return})
 
     else:
-        return render(request, 'home.html', {'ticker': "Enter a Ticker Symbol Above..."})
+
+        return render(request, 'home.html', {})
 
 
 def about(request):
@@ -46,7 +58,7 @@ def add_stock(request):
         output = []
         for ticker_item in ticker:
             api_request = requests.get(
-                f'https://api.iex.cloud/v1/data/core/quote/{str(ticker_item)}?token=sk_17a74334b7a54247b523922687d38e56')
+                f'{iex_cloud_url}{str(ticker_item)}?token={secret_token}')
 
             try:
                 api_return = json.loads(api_request.content)[0]
