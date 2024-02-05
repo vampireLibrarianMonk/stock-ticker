@@ -2,7 +2,7 @@
 {% load timestamp_filters %}
 {% block content %}
 
-<h1>Add Stock...</h1>
+<h1>Portfolio Management</h1>
 <br/>
 
 <form action="{% url 'add_stock' %}" class="form-inline my-2 my-lg-0" method="POST">
@@ -33,21 +33,26 @@
   </thead>
   <tbody>
     {% if ticker %}
-        {% for item in output %}
-            <tr>
-                <td>{{ item.symbol }}</td>
-                <td>{{ item.sector }}</td>
-                <td>{{ item.securityType }}</td>
-                <td>${{ item.bidPrice }}</td>
-                <td>{{ item.bidSize }}</td>
-                <td>${{ item.askPrice }}</td>
-                <td>{{ item.askSize }}</td>
-                <td>{{ item.lastUpdated|milliseconds_to_datetime }}</td>
-                <td>${{ item.lastSalePrice }}</td>
-                <td>{{ item.lastSaleSize }}</td>
-                <td>{{ item.lastSaleTime|milliseconds_to_datetime }}</td>
-                <td>{{ item.volume }}</td>
-            </tr>
+        {% for thing in ticker %}
+            {% for item in output %}
+                <tr>
+                    <td>{{ item.symbol }}</td>
+                    <td>{{ item.sector }}</td>
+                    <td>{{ item.securityType }}</td>
+                    <td>${{ item.bidPrice }}</td>
+                    <td>{{ item.bidSize }}</td>
+                    <td>${{ item.askPrice }}</td>
+                    <td>{{ item.askSize }}</td>
+                    <td>{{ item.lastUpdated|milliseconds_to_datetime }}</td>
+                    <td>${{ item.lastSalePrice }}</td>
+                    <td>{{ item.lastSaleSize }}</td>
+                    <td>{{ item.lastSaleTime|milliseconds_to_datetime }}</td>
+                    <td>{{ item.volume }}</td>
+                    <td>
+                        <a href="{% url 'delete_stock_with_id' thing.id %}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
         {% endfor %}
     {% endif %}
   </tbody>
