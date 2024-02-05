@@ -2,36 +2,32 @@
 {% load custom_filters %}
 {% block content %}
 
+{% for message in messages %}
+{% endfor %}
+
 {% if api_return %}
-    {% if api_return|length == 1 and api_return.0 == None %}
-        <p>There was a problem with your ticker symbol, please try again.</p>
-    {% elif api_return|length > 0 %}
-        {# Process each item in api_return assuming it's iterable/list-like #}
-        {% for item in api_return %}
-            {% if item %}
-                <div>
-                    <h1>{{ item.companyName }}</h1>
-                    <p>Price: {{ item.symbol }}</p>
-                    <p>Sector: {{ item.sector }}</p>
-                    <p>Security Type: {{ item.securityType }}</p>
-                    <p>Bid Price: {{ item.bidPrice }}</p>
-                    <p>Bid Size: {{ item.bidSize }}</p>
-                    <p>Ask Price: {{ item.askPrice }}</p>
-                    <p>Ask Size: {{ item.askSize }}</p>
-                    <p>Last Updated: {{ item.lastUpdated }}</p>
-                    <p>Last Sale Price: {{ item.lastSalePrice }}</p>
-                    <p>Last Sale Size: {{ item.lastSaleSize }}</p>
-                    <p>Last Sale Time: {{ item.lastSaleTime }}</p>
-                    <p>Volume: {{ item.volume }}</p>
-                </div>
-            {% else %}
-                <p>Error encountered in item: {{ item }}</p>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        {# Handle singular non-list api_return, such as a single error message #}
-        <p>{{ api_return }}</p>
-    {% endif %}
+    {# Process each item in api_return assuming it's iterable/list-like #}
+    {% for item in api_return %}
+        {% if item %}
+            <div>
+                <h1>{{ item.companyName }}</h1>
+                <p>Price: {{ item.symbol }}</p>
+                <p>Sector: {{ item.sector }}</p>
+                <p>Security Type: {{ item.securityType }}</p>
+                <p>Bid Price: {{ item.bidPrice }}</p>
+                <p>Bid Size: {{ item.bidSize }}</p>
+                <p>Ask Price: {{ item.askPrice }}</p>
+                <p>Ask Size: {{ item.askSize }}</p>
+                <p>Last Updated: {{ item.lastUpdated }}</p>
+                <p>Last Sale Price: {{ item.lastSalePrice }}</p>
+                <p>Last Sale Size: {{ item.lastSaleSize }}</p>
+                <p>Last Sale Time: {{ item.lastSaleTime }}</p>
+                <p>Volume: {{ item.volume }}</p>
+            </div>
+        {% else %}
+            <p>Error encountered in item: {{ item }}</p>
+        {% endif %}
+    {% endfor %}
 {% else %}
     <p>No data available to display. Enter desired ticker in top right part of page.</p>
 {% endif %}

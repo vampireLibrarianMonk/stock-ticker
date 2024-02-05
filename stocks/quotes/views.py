@@ -13,28 +13,33 @@ iex_cloud_url = 'https://api.iex.cloud/v1/data/core/iex_tops/'
 
 def home(request):
     if request.method == 'POST':
-        ticker = request.POST['ticker']
+        ticker_symbol = request.POST['ticker']
 
-        # Assuming iex_cloud_url, ticker, and secret_token are defined earlier
-        api_request = requests.get(f'{iex_cloud_url}{ticker}?token={secret_token}')
-
-        # Check for empty JSON array
-        if api_request.content == b'[]':
-            api_return = "Error: No data available for the given ticker."
+        if ticker_symbol == '':
+            return render(request, 'home.html', {})
         else:
-            try:
-                api_return = json.loads(api_request.content)
-            except JSONDecodeError:
-                # If JSON decoding fails, return the raw content as a UTF-8 decoded string
-                api_return = "Error: " + api_request.content.decode('utf-8')
-            except Exception as e:
-                # Generic exception handling as a fallback
-                api_return = f"Unexpected Error: {str(e)}"
+            # Assuming iex_cloud_url, ticker, and secret_token are defined earlier
+            api_request = requests.get(f'{iex_cloud_url}{ticker_symbol}?token={secret_token}')
 
-        return render(request, 'home.html', {'api_return': api_return})
+            # Check for empty JSON array
+            if api_request.content == b'[]':
+                messages.error(request,
+                               f"{ticker_symbol} is valid but returned no data. "
+                               "Please check the ticker symbol.")
+                return render(request, 'home.html', {})
+            else:
+                try:
+                    api_return = json.loads(api_request.content)
+                    messages.success(request, f"{ticker_symbol} found!")
+                except JSONDecodeError as error:
+                    messages.error(request, error)
+                    return render(request, 'home.html', {})
+                except Exception as exception:
+                    messages.error(request, exception)
+                    return render(request, 'home.html', {})
 
+                return render(request, 'home.html', {'api_return': api_return})
     else:
-
         return render(request, 'home.html', {})
 
 
