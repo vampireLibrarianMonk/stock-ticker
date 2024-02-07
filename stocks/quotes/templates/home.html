@@ -1,15 +1,21 @@
+<!-- Inherits the structure and blocks from 'base.html', enabling the reuse of its layout and components. -->
 {% extends 'base.html' %}
+
+<!-- Loads custom filters from the 'custom_filters' library for use within this template. -->
 {% load custom_filters %}
+
+<!-- Starts a 'content' block where specific content for this template is defined. -->
 {% block content %}
 
-{% for message in messages %}
-{% endfor %}
-
+<!-- Checks if 'api_return' has any data to process. -->
 {% if api_return %}
-    {# Process each item in api_return assuming it's iterable/list-like #}
+    <!-- Loops through each item in 'api_return', assuming it's an iterable/list-like structure. -->
     {% for item in api_return %}
+        <!-- Checks if the current item exists or has data. -->
         {% if item %}
+            <!-- A container division for displaying details of the current item. -->
             <div>
+                <!-- Displays various properties of the item, such as company name, symbol, sector, etc. -->
                 <h1>{{ item.companyName }}</h1>
                 <p>Price: {{ item.symbol }}</p>
                 <p>Sector: {{ item.sector }}</p>
@@ -24,12 +30,15 @@
                 <p>Last Sale Time: {{ item.lastSaleTime }}</p>
                 <p>Volume: {{ item.volume }}</p>
             </div>
+        <!-- Provides a message for items that may have encountered an error or do not have data. -->
         {% else %}
             <p>Error encountered in item: {{ item }}</p>
         {% endif %}
     {% endfor %}
+<!-- Displays a message when there is no data available in 'api_return'. -->
 {% else %}
     <p>No data available to display. Enter desired ticker in top right part of page.</p>
 {% endif %}
 
+<!-- Ends the 'content' block. -->
 {% endblock %}

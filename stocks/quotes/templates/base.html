@@ -1,25 +1,54 @@
+<!-- Declaration to define this document as HTML5 -->
 <!doctype html>
+
+<!-- The root element of the HTML document, specifying English as the primary language -->
 <html lang="en">
+
 <head>
+    <!-- Django template tag to load static files (for countdown clock), enabling access to CSS, JavaScript, and
+    images -->
     {% load static %}
-    <!-- Required meta tags -->
+
+    <!-- Meta tags essential for character encoding -->
     <meta charset="utf-8">
+
+    <!-- Character encoding for the document -->
+    <!-- Viewport settings to ensure the site scales correctly on different devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Link to Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
 
+    <!-- The title of the document, shown in the browser's title bar or tab -->
     <title>Stock Portfolio</title>
 </head>
+
+<!-- The body of the document for the main content -->
 <body>
+
+<!-- Bootstrap navbar for navigation, styled dark -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Brand/logo part of the navbar, linking to the home page -->
     <a class="navbar-brand" href="{% url 'home' %}">Stock Portfolio</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+    <!-- Toggle button for collapsed navbar menu (mobile devices) -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Navbar links for navigation -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- List of navigation links to different pages -->
             <li class="nav-item active">
                 <a class="nav-link" href="/">Home</a>
             </li>
@@ -30,27 +59,30 @@
                 <a class="nav-link" href="{% url 'about' %}">About</a>
             </li>
         </ul>
-        <form action="{% url 'home' %}" class="form-inline
-         my-2 my-lg-0" method="POST">
+
+        <!-- Form for stock quote search, POST method to submit to 'home' URL -->
+        <form action="{% url 'home' %}" class="form-inline my-2 my-lg-0" method="POST">
+            <!-- Cross Site Request Forgery (CSRF) token for security -->
             {% csrf_token %}
-          <input class="form-control mr-sm-2" type="search"
-                 placeholder="Get Stock Quote" aria-label="Search"
-                 name="ticker"
-          >
-          <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Stock Quote</button>
+            <input class="form-control mr-sm-2"
+                   type="search"
+                   placeholder="Get Stock Quote"
+                   aria-label="Search"
+                   name="ticker">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Stock Quote</button>
         </form>
     </div>
 </nav>
 
+<!-- Main container for the page content -->
 <div class="container">
-    <br/>
 
-    <!-- Countdown Clock Placeholder -->
+    <!-- Placeholder for a countdown clock, potentially for market open -->
     <div id="marketCountdown" class="alert alert-info" role="alert">
         Market opens in: <span id="countdown"></span>
     </div>
 
-
+    <!-- Block for displaying messages (e.g., success or error messages) -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -60,14 +92,18 @@
         {% endfor %}
     {% endif %}
 
+    <!-- Placeholder block for child templates to override with specific content -->
     {% block content %}
-
     {% endblock %}
 </div>
 
-<!-- Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjyLfq7PRRhFzZ5znG3eD8i6bQ2ePhDULYV61H0T5sMvI3P4dtFiq4" crossorigin="anonymous"></script>
+<!-- Scripts for Bootstrap's JavaScript components and custom functionality -->
+<!-- Bootstrap Bundle with Popper included for interactive components -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kQtW33rZJAHjyLfq7PRRhFzZ5znG3eD8i6bQ2ePhDULYV61H0T5sMvI3P4dtFiq4"
+        crossorigin="anonymous"></script>
 
+<!-- Custom JavaScript file for the countdown clock functionality -->
 <script src="{% static 'countdown_clock.js' %}"></script>
 
 </body>

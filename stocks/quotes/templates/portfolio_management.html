@@ -1,10 +1,18 @@
+<!-- Inherits the structure and blocks from 'base.html', enabling reuse of its layout and components. -->
 {% extends 'base.html' %}
+
+<!-- Load custom filters from the 'timestamp_filters' library for use within this template,
+such as formatting timestamps. -->
 {% load timestamp_filters %}
+
+<!-- Starts a 'content' block where specific content for this template is defined, overriding 'base.html'. -->
 {% block content %}
 
+<!-- Title of the page -->
 <h1>Portfolio Management</h1>
 <br/>
 
+<!-- Form for adding a new stock to the portfolio -->
 <form action="{% url 'add_stock' %}" class="form-inline my-2 my-lg-0" method="POST">
     {% csrf_token %}
     <input class="form-control mr-sm-2" type="search" placeholder="Add To Portfolio" aria-label="Search" name="ticker">
@@ -13,9 +21,11 @@
 
 <br/><br/>
 
+<!-- Table displaying stock information -->
 <table class="table table-bordered table-hover">
   <thead class="thead-dark">
     <tr>
+      <!-- Table headers defining the structure of stock information -->
       <th scope="col">Symbol</th>
       <th scope="col">Sector</th>
       <th scope="col">Security Type</th>
@@ -32,10 +42,13 @@
     </tr>
   </thead>
   <tbody>
+    <!-- Check if there are stocks to display -->
     {% if ticker %}
+        <!-- Loop through each stock -->
         {% for thing in ticker %}
             {% for item in output %}
                 <tr>
+                    <!-- Displaying individual stock details in each column -->
                     <td>{{ item.symbol }}</td>
                     <td>{{ item.sector }}</td>
                     <td>{{ item.securityType }}</td>
@@ -43,11 +56,13 @@
                     <td>{{ item.bidSize }}</td>
                     <td>${{ item.askPrice }}</td>
                     <td>{{ item.askSize }}</td>
+                    <!-- Applying custom filter to format the datetime -->
                     <td>{{ item.lastUpdated|milliseconds_to_datetime }}</td>
                     <td>${{ item.lastSalePrice }}</td>
                     <td>{{ item.lastSaleSize }}</td>
                     <td>{{ item.lastSaleTime|milliseconds_to_datetime }}</td>
                     <td>{{ item.volume }}</td>
+                    <!-- Delete action for each stock -->
                     <td>
                         <a href="{% url 'delete_stock_with_id' thing.id %}" class="btn btn-danger">Delete</a>
                     </td>
@@ -58,4 +73,5 @@
   </tbody>
 </table>
 
+<!-- Ends a 'content' block where specific content for this template is defined, overriding 'base.html'. -->
 {% endblock %}

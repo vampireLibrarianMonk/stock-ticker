@@ -1,52 +1,64 @@
+# Specifies the version of the buildspec file.
 version: 0.2
+
 phases:
   pre_build:
     commands:
+    # Print environment variables for debugging purposes.
     - env
+    # Display the operating system information.
     - cat /etc/os-release
+    # Display the AWS CLI version.
     - aws --version
 
-    # Add Docker's official GPG key:
+    # Commands to add Docker's official GPG key to ensure downloads are validated.
     - apt-get update -y
     - apt-get install -y ca-certificates curl
     - install -m 0755 -d /etc/apt/keyrings
     - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     - chmod a+r /etc/apt/keyrings/docker.asc
 
-    # Create a temporary file with the Docker repository configuration:
+    # Creates a temporary file with the Docker repository configuration.
     - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" > /tmp/docker.list
 
-    # Copy the temporary file to the sources.list.d directory:
+    # Moves the Docker repository configuration file into the apt sources list, enabling Docker installation.
     - cp /tmp/docker.list /etc/apt/sources.list.d/docker.list
 
-    # Remove the temporary file:
+    # Cleans up the temporary file.
     - rm /tmp/docker.list
 
-    # Install docker
+    # Installs Docker and associated utilities.
     - apt-get update -y
     - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     - docker --version
 
+    # Logs into Amazon ECR to allow pushing and pulling of images.
     - echo Logging in to Amazon ECR....
-    - cat /etc/os-release
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 809784555426.dkr.ecr.us-east-1.amazonaws.com
     - cat ~/.docker/config.json
     - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
     - IMAGE_TAG=latest
   build:
     commands:
+    # Logs the start time of the build process.
     - echo Build started on `date`
+    # Builds the Docker image from a Dockerfile named 'containerfile'.
     - echo Building the Docker image...
     - docker build -f containerfile -t sweng-861:latest .
+    # Tags the built Docker image for pushing to Amazon ECR.
     - docker tag sweng-861:latest 809784555426.dkr.ecr.us-east-1.amazonaws.com/sweng-861:latest
   post_build:
     commands:
+    # Logs the completion time of the build process.
     - echo Build completed on `date`
+    # Pushes the Docker image to Amazon ECR.
     - echo pushing to repo
     - docker push 809784555426.dkr.ecr.us-east-1.amazonaws.com/sweng-861:latest
+    # Generates an image definitions file for deployment purposes.
     - echo Writing image definitions file...
-    #- printf '[{"ImageURI":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
     - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+
+# Specifies the files to be output by the build that are necessary for the deployment process.
 artifacts:
   files:
     - imageDetail.json

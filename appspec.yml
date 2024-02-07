@@ -1,9 +1,19 @@
+# Specifies the version of the AppSpec file.
 version: 0.0
+
+# Defines the resources and their configurations for deployment.
 Resources:
+  # Specifies a resource named 'TargetService' for deployment.
   - TargetService:
+      # Specifies the resource type as AWS ECS Service.
       Type: AWS::ECS::Service
+      # Defines the properties of the ECS service.
       Properties:
+        # Specifies the Task Definition ARN for the ECS service.
         TaskDefinition: "arn:aws:ecs:us-east-1:809784555426:task-definition/stock-ticker-app:2"
+        # Provides information about the load balancer configuration.
         LoadBalancerInfo:
+          # Specifies the name of the container within the ECS service.
           ContainerName: "stock-ticke-basic"
+          # Specifies the port number to expose from the container.
           ContainerPort: 8000

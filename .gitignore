@@ -9,5 +9,5 @@
 *.tar.gz
 *.tar
 
-# Database
+# Database that is formed in creation of image and eventually will be separately hosted in a cloud service
 db.sqlite3
