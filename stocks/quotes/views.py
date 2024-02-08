@@ -39,15 +39,15 @@ def home(request):
         else:
             # Token issues
             try:
-                # Attempt to retrieve the SECRET_TOKEN from the environment or settings.
+                # Attempt to retrieve the SECRET_TOKEN from the environment.
                 secret_token = getenv('SECRET_TOKEN')
 
-                # Check if token is not blank
-                if secret_token == '':
-                    raise AttributeError
-            except AttributeError:
-                # Handle the error if SECRET_TOKEN is not found.
-                messages.error(request, "Internal error: API token is missing.")
+                # Check if token is not found or blank
+                if not secret_token or secret_token is None:
+                    raise ValueError("API token is missing or empty.")
+            except ValueError as e:
+                # Handle the error if SECRET_TOKEN is not found or is empty.
+                messages.error(request, f"Internal error: {str(e)}")
                 return render(request, 'home.html', {})
 
             # Make an API request to a stock information service using the ticker symbol.
