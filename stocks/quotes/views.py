@@ -23,7 +23,6 @@ from os import getenv
 import requests
 
 # IEX Cloud Secret Token and API URL for current Data Bundle
-secret_token = getenv('SECRET_TOKEN')
 iex_cloud_url = 'https://api.iex.cloud/v1/data/core/iex_tops/'
 
 
@@ -38,6 +37,19 @@ def home(request):
         if ticker_symbol == '':
             return render(request, 'home.html', {})
         else:
+            # Token issues
+            try:
+                # Attempt to retrieve the SECRET_TOKEN from the environment or settings.
+                secret_token = getenv('SECRET_TOKEN')
+
+                # Check if token is not blank
+                if secret_token == '':
+                    raise AttributeError
+            except AttributeError:
+                # Handle the error if SECRET_TOKEN is not found.
+                messages.error(request, "Internal error: API token is missing.")
+                return render(request, 'home.html', {})
+
             # Make an API request to a stock information service using the ticker symbol.
             api_request = requests.get(f'{iex_cloud_url}{ticker_symbol}?token={secret_token}')
 
@@ -90,7 +102,20 @@ def add_stock(request):
             if Stock.objects.filter(ticker=ticker_symbol).exists():
                 messages.error(request, f"Ticker symbol '{ticker_symbol}' already exists in the database.")
             else:
-                # Constructs the API URL to verify the ticker symbol using the IEX Cloud API.
+                # Token issues
+                try:
+                    # Attempt to retrieve the SECRET_TOKEN from the environment or settings.
+                    secret_token = getenv('SECRET_TOKEN')
+
+                    # Check if token is not blank
+                    if secret_token == '':
+                        raise AttributeError
+                except AttributeError:
+                    # Handle the error if SECRET_TOKEN is not found.
+                    messages.error(request, "Internal error: API token is missing.")
+                    return render(request, 'home.html', {})
+
+                    # Constructs the API URL to verify the ticker symbol using the IEX Cloud API.
                 api_url = f'{iex_cloud_url}{ticker_symbol}?token={secret_token}'
                 response = requests.get(api_url)
 
@@ -177,6 +202,19 @@ def portfolio_management(request):
     # Loop through each stock object retrieved from the database.
     for ticker_item in ticker:
         try:
+            # Token issues
+            try:
+                # Attempt to retrieve the SECRET_TOKEN from the environment or settings.
+                secret_token = getenv('SECRET_TOKEN')
+
+                # Check if token is not blank
+                if secret_token == '':
+                    raise AttributeError
+            except AttributeError:
+                # Handle the error if SECRET_TOKEN is not found.
+                messages.error(request, "Internal error: API token is missing.")
+                return render(request, 'home.html', {})
+
             # Make an API request to fetch detailed data for the current stock ticker.
             # The request URL is constructed dynamically using the stock's ticker symbol, IEX Cloud URL, and a secret
             # token for authentication.
