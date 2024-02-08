@@ -10,7 +10,7 @@ Resources:
       # Defines the properties of the ECS service.
       Properties:
         # Specifies the Task Definition ARN for the ECS service.
-        TaskDefinition: "arn:aws:ecs:us-east-1:809784555426:task-definition/stock-ticker-app:2"
+        TaskDefinition: "arn:aws:ecs:us-east-1:809784555426:task-definition/stock-ticker-app:6"
         # Provides information about the load balancer configuration.
         LoadBalancerInfo:
           # Specifies the name of the container within the ECS service.
