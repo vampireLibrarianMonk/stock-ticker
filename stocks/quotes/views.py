@@ -86,68 +86,48 @@ def add_stock(request):
             # Extracts the ticker symbol from the validated form data.
             ticker_symbol = form.cleaned_data["ticker"]
 
-            # Constructs the API URL to verify the ticker symbol using the IEX Cloud API.
-            api_url = f'{iex_cloud_url}{ticker_symbol}?token={secret_token}'
-            response = requests.get(api_url)
-
-            # Checks if the API call was successful (HTTP status code 200).
-            if response.status_code == 200:
-                # Parses the API response data.
-                stock_data = response.json()
-                if stock_data:  # Checks if the API response contains data.
-                    # Saves the form data to the database if the ticker symbol is valid and data is returned.
-                    new_stock = form.save()
-                    # Notifies the user that the stock has been successfully added.
-                    messages.success(request, "Stock Has Been Added!")
-                    # Redirects to the portfolio management page.
-                    return redirect('portfolio_management')
-                else:
-                    # Notifies the user if the ticker symbol is valid but no data was returned.
-                    messages.error(request,
-                                   f"{ticker_symbol} is valid but returned no data. Please check the ticker symbol.")
+            # Check if the ticker symbol already exists in the database.
+            if Stock.objects.filter(ticker=ticker_symbol).exists():
+                messages.error(request, f"Ticker symbol '{ticker_symbol}' already exists in the database.")
             else:
-                # Notifies the user if the ticker symbol is invalid.
-                messages.error(request, "Invalid ticker symbol. Please check input and try again.")
+                # Constructs the API URL to verify the ticker symbol using the IEX Cloud API.
+                api_url = f'{iex_cloud_url}{ticker_symbol}?token={secret_token}'
+                response = requests.get(api_url)
+
+                # Checks if the API call was successful (HTTP status code 200).
+                if response.status_code == 200:
+                    # Parses the API response data.
+                    stock_data = response.json()
+
+                    # Checks if the API response contains data.
+                    if stock_data:
+                        # Saves the form data to the database if the ticker symbol is valid and data is returned.
+                        form.save()
+
+                        # Notifies the user that the stock has been successfully added.
+                        messages.success(request, "Stock Has Been Added!")
+                    else:
+                        # Notifies the user if the ticker symbol is valid but no data was returned.
+                        messages.error(request,
+                                       f"{ticker_symbol} returned no data. Please check the ticker symbol.")
+                else:
+                    # Notifies the user if the ticker symbol is invalid.
+                    messages.error(request, "Invalid ticker symbol. Please check input and try again.")
         else:
             # Notifies the user if there was an error adding the stock due to invalid form data.
             messages.error(request, "Error Adding Stock. Please check input.")
 
-    else:
-        # Creates a new, empty StockForm instance for a GET request.
-        form = StockForm()
+            # Additional handling for form errors, specifically targeting the 'ticker' field.
+            if len(form.errors) > 0:
+                # Extracts errors related to the 'ticker' field.
+                error_list = form.errors.as_data().get('ticker', [])
 
-    # Retrieves all ticker symbols from the database.
-    ticker = Stock.objects.all()
-    output = []
+                errors = [str(e) for error in error_list for e in error]
+                if errors:
+                    # Joins and displays errors related to the 'ticker' field.
+                    messages.error(request, "\n".join(errors))
 
-    # Iterates through each ticker symbol to fetch and append its data to the output list.
-    for ticker_item in ticker:
-        api_url = f'{iex_cloud_url}{ticker_item.ticker}?token={secret_token}'
-        try:
-            response = requests.get(api_url)
-            if response.status_code == 200:
-                # Appends the API response data to the output list if successful.
-                stock_data = response.json()
-                output.append(stock_data)
-            else:
-                # Notifies the user if fetching data for a ticker symbol failed.
-                messages.error(request, f"Failed to fetch data for {ticker_item.ticker}.")
-        except Exception as e:
-            # Handles any exceptions during the API call and notifies the user.
-            messages.error(request, f"An error occurred while fetching data for {ticker_item.ticker}: {str(e)}")
-
-    # Additional handling for form errors, specifically targeting the 'ticker' field.
-    if len(form.errors) > 0:
-        # Extracts errors related to the 'ticker' field.
-        error_list = form.errors.as_data().get('ticker', [])
-
-        errors = [str(e) for error in error_list for e in error]
-        if errors:
-            # Joins and displays errors related to the 'ticker' field.
-            messages.error(request, "\n".join(errors))
-
-    # Renders the portfolio management template with the form, ticker symbols, and their data.
-    return render(request, 'portfolio_management.html', {'form': form, 'ticker': ticker, 'output': output})
+    return redirect('portfolio_management')
 
 
 # Delete Stock with ID Functionality
@@ -201,8 +181,13 @@ def portfolio_management(request):
             # The request URL is constructed dynamically using the stock's ticker symbol, IEX Cloud URL, and a secret
             # token for authentication.
             api_request = requests.get(f'{iex_cloud_url}{ticker_item.ticker}?token={secret_token}')
+
             # Parse the API response and assume it returns a list. Get the first item from the list as the API return.
             api_return = json_loads(api_request.content)[0]
+
+            # Add ticker id to api_return for delete index
+            api_return["id"] = ticker_item.id
+
             # Append the API response data for the current stock to the output list.
             output.append(api_return)
         except Exception as e:
@@ -210,7 +195,10 @@ def portfolio_management(request):
             # error message.
             messages.error(request, f"Error fetching data for {ticker_item.ticker}: {str(e)}")
 
+    # Sort the list by ticker symbol
+    sorted_output = sorted(output, key=lambda x: x['symbol'])
+
     # Render the portfolio management page with the context data.
     # The context includes the stock form, all stock objects, and the API response data for each stock.
     return render(request, 'portfolio_management.html',
-                  {'form': form, 'ticker': ticker, 'output': output})
+                  {'form': form, 'ticker': ticker, 'output': sorted_output})

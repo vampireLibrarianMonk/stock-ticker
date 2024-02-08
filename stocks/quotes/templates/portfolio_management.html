@@ -45,29 +45,27 @@ such as formatting timestamps. -->
     <!-- Check if there are stocks to display -->
     {% if ticker %}
         <!-- Loop through each stock -->
-        {% for thing in ticker %}
-            {% for item in output %}
-                <tr>
-                    <!-- Displaying individual stock details in each column -->
-                    <td>{{ item.symbol }}</td>
-                    <td>{{ item.sector }}</td>
-                    <td>{{ item.securityType }}</td>
-                    <td>${{ item.bidPrice }}</td>
-                    <td>{{ item.bidSize }}</td>
-                    <td>${{ item.askPrice }}</td>
-                    <td>{{ item.askSize }}</td>
-                    <!-- Applying custom filter to format the datetime -->
-                    <td>{{ item.lastUpdated|milliseconds_to_datetime }}</td>
-                    <td>${{ item.lastSalePrice }}</td>
-                    <td>{{ item.lastSaleSize }}</td>
-                    <td>{{ item.lastSaleTime|milliseconds_to_datetime }}</td>
-                    <td>{{ item.volume }}</td>
-                    <!-- Delete action for each stock -->
-                    <td>
-                        <a href="{% url 'delete_stock_with_id' thing.id %}" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            {% endfor %}
+        {% for item in output %}
+            <tr>
+                <!-- Displaying individual stock details in each column -->
+                <td>{{ item.symbol }}</td>
+                <td>{{ item.sector }}</td>
+                <td>{{ item.securityType }}</td>
+                <td>${{ item.bidPrice }}</td>
+                <td>{{ item.bidSize }}</td>
+                <td>${{ item.askPrice }}</td>
+                <td>{{ item.askSize }}</td>
+                <!-- Applying custom filter to format the datetime -->
+                <td>{{ item.lastUpdated|milliseconds_to_datetime }}</td>
+                <td>${{ item.lastSalePrice }}</td>
+                <td>{{ item.lastSaleSize }}</td>
+                <td>{{ item.lastSaleTime|milliseconds_to_datetime }}</td>
+                <td>{{ item.volume }}</td>
+                <!-- Delete action for each stock -->
+                <td>
+                    <a href="{% url 'delete_stock_with_id' item.id %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
         {% endfor %}
     {% endif %}
   </tbody>
