@@ -16,12 +16,29 @@ from json.decoder import JSONDecodeError
 # Stock model to represent stock data within the database.
 from .models import Stock
 
-# getenv from os module to securely access environment variables.
-from os import getenv
-
 # requests library for making HTTP requests to web services or APIs.
 import requests
 
+# os library for getting environment variables
+import os
+
+# sys for system path manipulations
+import sys
+
+# Assuming 'functions' is in the same directory as this script
+# Get the directory of the current script
+current_script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Path to the 'functions' directory
+functions_path = os.path.join(current_script_dir, 'functions')
+
+# Add the 'functions' directory to the Python path
+sys.path.append(functions_path)
+
+# Now you can import the apiTokens module
+import apiTokens
+
+# Embedded variables
 # IEX Cloud Secret Token and API URL for current Data Bundle
 iex_cloud_url = 'https://api.iex.cloud/v1/data/core/iex_tops/'
 
@@ -40,7 +57,7 @@ def home(request):
             # Token issues
             try:
                 # Attempt to retrieve the SECRET_TOKEN from the environment.
-                secret_token = getenv('SECRET_TOKEN')
+                secret_token = apiTokens.get_secret()
 
                 # Check if token is not found or blank
                 if not secret_token or secret_token is None:
@@ -83,7 +100,14 @@ def home(request):
 
 # About Informational Page
 def about(request):
-    return render(request, 'about.html', {})
+    # Get all environment variables
+    env_vars = {key: value for key, value in os.environ.items()}
+
+    # Pass the environment variables to the template
+    context = {
+        'env_vars': env_vars
+    }
+    return render(request, 'about.html', context)
 
 
 # Add Stock Functionality
@@ -105,7 +129,7 @@ def add_stock(request):
                 # Token issues
                 try:
                     # Attempt to retrieve the SECRET_TOKEN from the environment or settings.
-                    secret_token = getenv('SECRET_TOKEN')
+                    secret_token = apiTokens.get_secret()
 
                     # Check if token is not blank
                     if secret_token == '':
@@ -205,7 +229,7 @@ def portfolio_management(request):
             # Token issues
             try:
                 # Attempt to retrieve the SECRET_TOKEN from the environment or settings.
-                secret_token = getenv('SECRET_TOKEN')
+                secret_token = apiTokens.get_secret()
 
                 # Check if token is not blank
                 if secret_token == '':
