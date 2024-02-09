@@ -1,6 +1,12 @@
 import boto3
 import os
 
+# loads function from json module as json_loads for parsing JSON strings into Python dictionaries.
+from json import loads as json_loads
+
+# Django's messaging framework for displaying temporary messages to the user.
+from django.contrib import messages
+
 
 def get_secret():
     # Attempt to retrieve the SECRET_TOKEN environment variable
@@ -16,7 +22,7 @@ def get_secret():
         secret_name = os.getenv("SECRET_NAME")
 
         # AWS region where your secret is stored.
-        region_name = os.getenv("REGION")
+        region_name = os.getenv("AWS_REGION")
 
         # Create a session using Boto3 library.
         session = boto3.session.Session()
@@ -31,7 +37,7 @@ def get_secret():
         get_secret_value_response = client.get_secret_value(SecretId=secret_name)
 
         # Return the actual secret value from the response.
-        return get_secret_value_response['SecretString']
+        return json_loads(get_secret_value_response['SecretString'])['SECRET_TOKEN']
 
 # Instructions for Setting Up AWS CLI and Running the Script
 #
@@ -68,9 +74,9 @@ def get_secret():
 # This setup provides a comprehensive overview. Depending on specific needs, adjustments might be necessary
 # for the script, AWS CLI configuration, or IAM permissions.
 
-if __name__ == '__main__':
-    # Call the get_secret function and store the result.
-    secret = get_secret()
-
-    # Print the secret value.
-    print(f"Secret: {secret}")
+# if __name__ == '__main__':
+#     # Call the get_secret function and store the result.
+#     secret = get_secret()
+#
+#     # Print the secret value.
+#     print(f"Secret: {secret}")
