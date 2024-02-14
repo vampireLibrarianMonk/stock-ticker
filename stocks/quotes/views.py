@@ -206,6 +206,12 @@ def portfolio_management(request):
     # The form is populated with data from POST request if available, otherwise an empty form is created.
     form = StockForm(request.POST or None)
 
+    # Get the sort column name, defaulting to symbol
+    sort_by = request.GET.get('sort', 'symbol')
+
+    # Get the sort order, defaulting to ascending
+    sort_order = request.GET.get('order', 'asc')
+
     # Check if the request method is POST, indicating form submission.
     if request.method == 'POST':
         # Validate the form data. This checks whether the submitted data is valid according to the form fields defined
@@ -225,6 +231,7 @@ def portfolio_management(request):
 
     # Loop through each stock object retrieved from the database.
     for ticker_item in ticker:
+
         try:
             # Token issues
             try:
@@ -257,8 +264,11 @@ def portfolio_management(request):
             # error message.
             messages.error(request, f"Error fetching data for {ticker_item.ticker}: {str(e)}")
 
-    # Sort the list by ticker symbol
-    sorted_output = sorted(output, key=lambda x: x['symbol'])
+    # Apply sorting with input order
+    if sort_order == 'desc':
+        sorted_output = sorted(output, key=lambda x: x.get(sort_by, ''), reverse=True)
+    else:
+        sorted_output = sorted(output, key=lambda x: x.get(sort_by, ''))
 
     # Render the portfolio management page with the context data.
     # The context includes the stock form, all stock objects, and the API response data for each stock.

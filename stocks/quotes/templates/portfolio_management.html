@@ -25,20 +25,67 @@ such as formatting timestamps. -->
 <table class="table table-bordered table-hover">
   <thead class="thead-dark">
     <tr>
-      <!-- Table headers defining the structure of stock information -->
-      <th scope="col">Symbol</th>
-      <th scope="col">Sector</th>
-      <th scope="col">Security Type</th>
-      <th scope="col">Bid Price</th>
-      <th scope="col">Bid Size</th>
-      <th scope="col">Ask Price</th>
-      <th scope="col">Ask Size</th>
-      <th scope="col">Last Updated</th>
-      <th scope="col">Last Sale Price</th>
-      <th scope="col">Last Sale Size</th>
-      <th scope="col">Last Sale Time</th>
-      <th scope="col">Volume</th>
-      <th scope="col">Actions</th>
+        <th scope="col">
+          <a href="?sort=symbol&order={% if request.GET.sort == 'symbol' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Symbol{% if request.GET.sort == 'symbol' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=sector&order={% if request.GET.sort == 'sector' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Sector{% if request.GET.sort == 'sector' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=securityType&order={% if request.GET.sort == 'securityType' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Security Type{% if request.GET.sort == 'securityType' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=bidPrice&order={% if request.GET.sort == 'bidPrice' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Bid Price{% if request.GET.sort == 'bidPrice' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=bidSize&order={% if request.GET.sort == 'bidSize' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Bid Size{% if request.GET.sort == 'bidSize' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=askPrice&order={% if request.GET.sort == 'askPrice' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Ask Price{% if request.GET.sort == 'askPrice' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=askSize&order={% if request.GET.sort == 'askSize' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Ask Size{% if request.GET.sort == 'askSize' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=lastUpdated&order={% if request.GET.sort == 'lastUpdated' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Last Updated{% if request.GET.sort == 'lastUpdated' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=lastSalePrice&order={% if request.GET.sort == 'lastSalePrice' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Last Sale Price{% if request.GET.sort == 'lastSalePrice' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=lastSaleSize&order={% if request.GET.sort == 'lastSaleSize' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Last Sale Size{% if request.GET.sort == 'lastSaleSize' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=lastSaleTime&order={% if request.GET.sort == 'lastSaleTime' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Last Sale Time{% if request.GET.sort == 'lastSaleTime' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">
+          <a href="?sort=volume&order={% if request.GET.sort == 'volume' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+              Volume{% if request.GET.sort == 'volume' %}[{% if request.GET.order == 'asc' %}↑{% else %}↓{% endif %}]{% endif %}
+          </a>
+        </th>
+        <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
