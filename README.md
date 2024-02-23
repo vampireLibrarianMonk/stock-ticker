@@ -31,14 +31,14 @@ Python and Django are at the heart of this project. Their blend of simplicity an
 In a typical CI/CD (Continuous Integration/Continuous Deployment) pipeline, various stages such as code commit, code build, and code deploy are orchestrated to automate the software delivery process via code pipeline. When integrated with services like Elastic Container Registry (ECR) and Elastic Container Service (ECS), these stages become part of a streamlined deployment workflow for containerized applications.
 
 ## Code Commit:
-  * Code Commit is a fully managed source control service provided by AWS, facilitating secure and scalable hosting for private Git repositories.
+  * Code Commit is a source control service provided by AWS, facilitating secure and scalable hosting for private Git repositories.
 
   * Developers use Code Commit to store and manage their application source code. Upon a code push, triggers can be set up to initiate the CI/CD pipeline.
 
   * Code Commit ensures secure and collaborative code management, allowing teams to easily collaborate on projects and track changes efficiently.
 
 ## Code Build:
-  * Is a fully managed build service provided by AWS, enabling developers to compile, test, and package their code without the need to manage build servers.
+  * Is a build service provided by AWS, enabling developers to compile, test, and package their code without the need to manage build servers.
 
   * Pulls the application source code from Code Commit or other repositories, performs the necessary build steps defined in build specifications, and generates artifacts.
 
@@ -52,18 +52,27 @@ In a typical CI/CD (Continuous Integration/Continuous Deployment) pipeline, vari
   * Enables rapid, reliable, and consistent deployments, with features such as blue-green deployments and canary deployments to minimize downtime and mitigate risks.
 
 ## ECR:
-  * Is a fully managed Docker container registry provided by AWS, allowing developers to store, manage, and deploy container images.
+  * Is a Docker container registry provided by AWS, allowing developers to store, manage, and deploy container images.
 
   * Developers push Docker images to ECR, and ECR securely stores these images, making them accessible to ECS and other container orchestration platforms.
 
   * Seamlessly integrates with ECS, simplifying the container deployment process by providing a secure and scalable registry for Docker images. It also integrates with AWS IAM for fine-grained access control.
 
 ## ECS:
-  * Is a fully managed container orchestration service provided by AWS, allowing developers to run, scale, and manage Docker containers in a highly available and scalable environment.
+  * Is a container orchestration service provided by AWS, allowing developers to run, scale, and manage Docker containers in a highly available and scalable environment.
 
   * Enables developers to define task definitions and services that specify how Docker containers should be deployed and managed. It automatically handles cluster management, scaling, and load balancing.
 
   * Abstracts away the underlying infrastructure complexity, allowing developers to focus on building and deploying containerized applications. It integrates seamlessly with other AWS services, including ECR, Code Pipeline, and CloudWatch, for a comprehensive container deployment solution.
+
+## Secrets Manager
+  * Is a secure parameter service provided by AWS, designed to help securely manage, retrieve, and store sensitive information such as database credentials, API keys, and other secrets. 
+
+  * It can automatically rotate secrets according to the schedule you define, ensuring that your applications are always using secure and up-to-date credentials. 
+
+  * This service improves the security posture of applications by eliminating the need to hard-code sensitive information, thereby reducing the risk of secret leakage. 
+
+  * Seamlessly integrates with ECS, providing a comprehensive solution for managing secrets.
 
 # Micromamba for Dependency Management:
 
@@ -98,3 +107,102 @@ Micromamba, an open-source package management system and environment manager, is
 # Conclusion
 
 My stock market portfolio is more than a technical project; it's just the beginning to more accessible financial monitoring tools. It stands as my exemplar for learning and applying Django's capabilities in CRUD operations, database management, and API integration. Combined with the power of AWS provisioned services, this project not only assists in meeting academic criteria but also expanding my existing developer skills in end-to-end application development and providing a showcase for a foundational financial operations platform. The end result is a tool that's lays the groundwork for comprehensive tracking investments and will eventually serve as a testament to modern software development practices as progresses in development.
+
+# Directions
+
+## Mamba Environment Manager
+1. We’ll use the Mamba package manager to create the Python environment. You can learn more about it in my getting started tutorial.
+
+The following bash commands will download the latest release, install it, and relaunch the current bash shell to apply the relevant changes:
+```bash
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+bash Mambaforge-$(uname)-$(uname -m).sh -b
+~/mambaforge/bin/mamba init
+bash
+```
+
+## Mamba Pytorch Installation
+1. Create mamba environment:
+```bash
+mamba env create -f environment.yml
+```
+
+2. Activate environment:
+```bash
+mamba activate stock-ticker
+```
+
+## IEX Cloud 
+1. Go to [IEX Cloud](https://iexcloud.io/) and start a free trial and register a new account. The API token for sample services will suffice.
+
+![iex_cloud](supporting_graphics/iexcloud_image1.png)
+
+2. This is the [link](https://iexcloud.io/docs/core/iex-bid-ask-and-last-trade-bundle?token=pk_dba4b23294284b848381153ad385d015) to the api reference page for the particular data bundle implemented.
+
+3. Below is the reference for what data you can expect by using this tool.
+
+![iex_api_ref](supporting_graphics/iex_api_ref.png)
+
+# Simple python run
+1. Export environment variable for secret api token:
+```bash
+export SECRET_TOKEN={SECRET_TOKEN}
+```
+
+2. Run Django server:
+```bash
+python stocks/manage.py runserver
+```
+
+## Pycharm Integrated Development Environment
+1. Download [here](https://www.jetbrains.com/pycharm/download/other.html). Below is the IDE used for this presentation.
+```bash
+PyCharm 2023.2.6 (Community Edition)
+Build #PC-232.10300.41, built on February 14, 2024
+Runtime version: 17.0.10+7-b1000.48 amd64
+VM: OpenJDK 64-Bit Server VM by JetBrains s.r.o.
+Linux 6.5.0-18-generic
+GC: G1 Young Generation, G1 Old Generation
+Memory: 1500M
+Cores: 24
+Registry:
+    ide.experimental.ui=true
+
+
+Current Desktop: ubuntu:GNOME
+```
+
+2. Below is the run configuration with a blank slot for your secret api token.
+
+![pycharm_env_var_1](supporting_graphics/pycharm_env_var_1.png)
+
+## Look at stock-ticker webpage
+1. Open browser and navigate to localhost:8000
+
+![stock-ticker-main](supporting_graphics/stock-ticker-main.png)
+
+2. Enter the ticker symbol of your stock.
+
+![example_ticker_grc](supporting_graphics/example_ticker_grc.png)
+
+3. Go to the Portfolio Management page. I entered three sample stocks, the default order is ascending.
+
+![example_table_asc](supporting_graphics/example_table_asc.png)
+
+4. Clicking on the blue headers allows for ascending "↑" and descending "↓" order.
+
+6. Ascending:
+
+![example_table_asc_w_arrow](supporting_graphics/example_table_asc_w_arrow.png)
+
+7. Descending:
+
+![example_table_asc_w_arrow](supporting_graphics/example_table_desc_w_arrow.png)
+
+8. Delete stock from table:
+
+![delete_stock](supporting_graphics/delete_stock.png)
+
+9. Lastly, there is an about page for more information on the data and the stock market in general.
+
+![about](supporting_graphics/about.png)
