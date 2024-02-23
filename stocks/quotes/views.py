@@ -73,8 +73,7 @@ def home(request):
             # Check if the API request returns an empty JSON array, indicating no data found.
             if api_request.content == b'[]':
                 # Display an error message if no data is returned for the valid ticker symbol.
-                messages.error(request, f"{ticker_symbol} is valid but returned no data. "
-                                        f"Please check the ticker symbol.")
+                messages.error(request, "Invalid ticker symbol. Please check input and try again.")
                 return render(request, 'home.html', {})
             else:
                 try:
